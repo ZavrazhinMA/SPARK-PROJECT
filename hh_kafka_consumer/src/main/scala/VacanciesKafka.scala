@@ -9,6 +9,8 @@ import org.apache.spark.sql.types.{
 }
 object VacanciesKafka extends App with SparkSessionWrapper {
 
+  val topic = "testtest"
+
   val schema = new StructType()
     .add("_id", StringType, nullable = false)
     .add("title", StringType, nullable = false)
@@ -52,14 +54,13 @@ object VacanciesKafka extends App with SparkSessionWrapper {
   val includeVacanciesRlike =
     includeVacancies.select("title").as[String].collect().toSeq.mkString("|")
 
-  val jsonStreamHH = spark
-    .readStream
+  val jsonStreamHH = spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "localhost:9092")
-    .option("testtest", topic)
+    .option("subscribe", topic)
     .load()
     .selectExpr("CAST(value as STRING)")
-    .withColumn("jsonData", explode(from_json(col("value"), schema)))
+    .withColumn("jsonData", from_json(col("value"), schema))
     .select("jsonData.*")
     .withColumn("_id", col("_id").cast(IntegerType))
     .withColumn(
@@ -173,7 +174,10 @@ object VacanciesKafka extends App with SparkSessionWrapper {
       "high_level_salary_NET",
       col("high_level_salary_NET").cast(IntegerType)
     )
-    .withColumn("vacancy_date", regexp_replace(col("vacancy_date"), "\\xa0", " "))
+    .withColumn(
+      "vacancy_date",
+      regexp_replace(col("vacancy_date"), "\\xa0", " ")
+    )
     .withColumn("temp_day", regexp_extract(col("vacancy_date"), "\\d+", 0))
     .withColumn(
       "temp_month",
@@ -194,11 +198,10 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .filter(col("title").rlike(includeVacanciesRlike))
     .filter(!col("title").isin(trashVacanciesSeq: _*))
 
-  jsonStreamHH
-    .writeStream
+  jsonStreamHH.writeStream
     .format("parquet")
     .outputMode("append")
-//    .option("checkpointLocation", "src/main/result/chkp")
+    .option("checkpointLocation", "src/main/chkp")
     .option("path", "D:/results")
     .start()
     .awaitTermination()
