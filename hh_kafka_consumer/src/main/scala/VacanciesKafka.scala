@@ -173,8 +173,7 @@ object VacanciesKafka extends App with SparkSessionWrapper {
       "high_level_salary_NET",
       col("high_level_salary_NET").cast(IntegerType)
     )
-    .withColumn(
-      "vacancy_date", regexp_replace(col("vacancy_date"), "\\xa0", " "))
+    .withColumn("vacancy_date", regexp_replace(col("vacancy_date"), "\\xa0", " "))
     .withColumn("temp_day", regexp_extract(col("vacancy_date"), "\\d+", 0))
     .withColumn(
       "temp_month",
