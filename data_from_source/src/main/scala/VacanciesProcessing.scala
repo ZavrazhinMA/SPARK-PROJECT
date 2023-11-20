@@ -189,6 +189,10 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
         col("temp_day")
       )
     )
+    .withColumn(
+      "month_for_partition",
+      concat(col("temp_year"), col("temp_month")).cast(IntegerType)
+    )
     .drop("temp_day", "temp_month", "temp_year", "employer_address")
     .filter(col("title").rlike(includeVacanciesRlike))
     .filter(!col("title").isin(trashVacanciesSeq: _*))
