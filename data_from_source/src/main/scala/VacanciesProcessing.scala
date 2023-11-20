@@ -56,7 +56,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .schema(schema)
     .format("json")
     .option("multiline", value = true)
-    .load("src/main/source/great_main_parse_it.json")
+    .load("src/main/source/it_rus_main.hh_it.json")
     .withColumn("_id", col("_id").cast(IntegerType))
     .withColumn(
       "emp_feedback_number",
@@ -166,12 +166,12 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
         .otherwise(col("high_level_salary_NET"))
     )
     .withColumn(
-      "vacancy_date",
-      when(col("vacancy_date").isNull, "10 ноября 2023")
-    )
-    .withColumn(
       "high_level_salary_NET",
       col("high_level_salary_NET").cast(IntegerType)
+    )
+    .withColumn(
+      "vacancy_date",
+      regexp_replace(col("vacancy_date"), "\\xa0", " ")
     )
     .withColumn("temp_day", regexp_extract(col("vacancy_date"), "\\d+", 0))
     .withColumn(
