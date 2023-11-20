@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.{
   StringType,
   StructType
 }
-object VacanciesProcessing extends App with SparkSessionWrapper {
+object VacanciesKafka extends App with SparkSessionWrapper {
 
   val schema = new StructType()
     .add("_id", StringType, nullable = false)
@@ -52,11 +52,15 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
   val includeVacanciesRlike =
     includeVacancies.select("title").as[String].collect().toSeq.mkString("|")
 
-  val vacanciesHH = spark.read
-    .schema(schema)
-    .format("json")
-    .option("multiline", value = true)
-    .load("src/main/source/great_main_parse_it.json")
+  val jsonStreamHH = spark
+    .readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "localhost:9092")
+    .option("testtest", topic)
+    .load()
+    .selectExpr("CAST(value as STRING)")
+    .withColumn("jsonData", explode(from_json(col("value"), schema)))
+    .select("jsonData.*")
     .withColumn("_id", col("_id").cast(IntegerType))
     .withColumn(
       "emp_feedback_number",
@@ -166,15 +170,11 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
         .otherwise(col("high_level_salary_NET"))
     )
     .withColumn(
-      "vacancy_date",
-      when(col("vacancy_date").isNull, "10 ноября 2023")
-//        ---------------------------------------------------------------------------------------
-        .otherwise(regexp_replace(col("vacancy_date"), "\\xa0", " "))
-    )
-    .withColumn(
       "high_level_salary_NET",
       col("high_level_salary_NET").cast(IntegerType)
     )
+    .withColumn(
+      "vacancy_date", regexp_replace(col("vacancy_date"), "\\xa0", " "))
     .withColumn("temp_day", regexp_extract(col("vacancy_date"), "\\d+", 0))
     .withColumn(
       "temp_month",
@@ -195,21 +195,13 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .filter(col("title").rlike(includeVacanciesRlike))
     .filter(!col("title").isin(trashVacanciesSeq: _*))
 
-  vacanciesHH
-    .coalesce(1)
-    .write
+  jsonStreamHH
+    .writeStream
     .format("parquet")
-    .mode("append")
-    .parquet("src/main/source/results")
+    .outputMode("append")
+//    .option("checkpointLocation", "src/main/result/chkp")
+    .option("path", "D:/results")
+    .start()
+    .awaitTermination()
 
-//  vacanciesHH
-//    .groupBy(col("title"))
-//    .agg(
-//      count(col("title"))
-//        .as("amount")
-//    )
-//    .orderBy(col("amount").desc)
-////    .drop(col("amount"))
-//    .show(200, truncate = false)
-//
 }
