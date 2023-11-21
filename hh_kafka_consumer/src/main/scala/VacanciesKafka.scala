@@ -9,32 +9,34 @@ import org.apache.spark.sql.types.{
 }
 object VacanciesKafka extends App with SparkSessionWrapper {
 
-  val topic = "testtest"
+  val topic = "test133"
 
-  val schema = new StructType()
-    .add("_id", StringType, nullable = false)
-    .add("title", StringType, nullable = false)
-    .add("vacancy_url", StringType, nullable = false)
-    .add("experience", StringType, nullable = true)
-    .add("work_schedule", StringType, nullable = false)
-    .add("work_schedule_add", StringType, nullable = false)
-    .add("salary", ArrayType(StringType), nullable = true)
-    .add("salary_type", StringType, nullable = true)
-    .add("employer", ArrayType(StringType), nullable = false)
-    .add("employer_address", ArrayType(StringType), nullable = false)
-    .add("description", ArrayType(StringType), nullable = false)
-    .add("strong_fields", ArrayType(StringType), nullable = true)
-    .add("key_skills", ArrayType(StringType), nullable = true)
-    .add("employer_page", StringType, nullable = false)
-    .add("employer_rating", StringType, nullable = true)
-    .add("emp_feedback_number", StringType, nullable = true)
-    .add("work_var_contract", StringType, nullable = true)
-    .add(
-      "work_var_parttime",
-      ArrayType(StringType, containsNull = true),
-      nullable = true
-    )
-    .add("vacancy_date", StringType, nullable = false)
+  val schema = ArrayType(
+    new StructType()
+      .add("_id", StringType, nullable = false)
+      .add("title", StringType, nullable = false)
+      .add("vacancy_url", StringType, nullable = false)
+      .add("experience", StringType, nullable = true)
+      .add("work_schedule", StringType, nullable = false)
+      .add("work_schedule_add", StringType, nullable = false)
+      .add("salary", ArrayType(StringType), nullable = true)
+      .add("salary_type", StringType, nullable = true)
+      .add("employer", ArrayType(StringType), nullable = false)
+      .add("employer_address", ArrayType(StringType), nullable = false)
+      .add("description", ArrayType(StringType), nullable = false)
+      .add("strong_fields", ArrayType(StringType), nullable = true)
+      .add("key_skills", ArrayType(StringType), nullable = true)
+      .add("employer_page", StringType, nullable = false)
+      .add("employer_rating", StringType, nullable = true)
+      .add("emp_feedback_number", StringType, nullable = true)
+      .add("work_var_contract", StringType, nullable = true)
+      .add(
+        "work_var_parttime",
+        ArrayType(StringType, containsNull = true),
+        nullable = true
+      )
+      .add("vacancy_date", StringType, nullable = false)
+  )
 
   val includeVacancies = spark.read
     .format("csv")
@@ -60,7 +62,7 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .option("subscribe", topic)
     .load()
     .selectExpr("CAST(value as STRING)")
-    .withColumn("jsonData", from_json(col("value"), schema))
+    .withColumn("jsonData", explode(from_json(col("value"), schema)))
     .select("jsonData.*")
     .withColumn("_id", col("_id").cast(IntegerType))
     .withColumn(
@@ -201,7 +203,6 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .drop("temp_day", "temp_month", "temp_year", "employer_address")
     .filter(col("title").rlike(includeVacanciesRlike))
     .filter(!col("title").isin(trashVacanciesSeq: _*))
-
   jsonStreamHH.writeStream
     .format("parquet")
     .outputMode("append")
@@ -209,5 +210,4 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .option("path", "D:/results")
     .start()
     .awaitTermination()
-
 }
