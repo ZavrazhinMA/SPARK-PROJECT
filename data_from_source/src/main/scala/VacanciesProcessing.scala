@@ -71,13 +71,17 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       )
     )
     .withColumn("title", regexp_replace(lower(col("title")), "\\s+", " "))
+    .filter(col("title").rlike(includeVacanciesRlike))
+    .filter(!col("title").isin(trashVacanciesSeq: _*))
     .withColumn("employer", concat_ws("", col("employer")))
     .withColumn(
       "city_from_url",
-      regexp_replace(
-        regexp_extract(col("vacancy_url"), "//[a-z]+", 0),
-        "//",
-        ""
+      cityMap(
+        regexp_replace(
+          regexp_extract(col("vacancy_url"), "//[a-z]+", 0),
+          "//",
+          ""
+        )
       )
     )
     .withColumn("employer_city", col("employer_address")(0))
@@ -194,8 +198,104 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       concat(col("temp_year"), col("temp_month")).cast(IntegerType)
     )
     .drop("temp_day", "temp_month", "temp_year", "employer_address")
-    .filter(col("title").rlike(includeVacanciesRlike))
-    .filter(!col("title").isin(trashVacanciesSeq: _*))
+//    .withColumn("title_group", array(lit("")))
+    .withColumn(
+      "ds",
+      when(
+        col("title").rlike(groupsMap("Data science")),
+        lit("Data science")
+      )
+    )
+    .withColumn(
+      "support",
+      when(
+        col("title").rlike(groupsMap("Cпециалист техподдержки")),
+        lit("Cпециалист техподдержки")
+      )
+    )
+    .withColumn(
+      "qa",
+      when(col("title").rlike(groupsMap("QA специалист")), lit("QA специалист"))
+    )
+    .withColumn(
+      "devops",
+      when(
+        col("title").rlike(groupsMap("Devops специалист")),
+        lit("Devops специалист")
+      )
+    )
+    .withColumn(
+      "_1c",
+      when(col("title").rlike(groupsMap("1C специалист")), lit("1C специалист"))
+    )
+    .withColumn(
+      "sad",
+      when(
+        col("title").rlike(groupsMap("Системный администратор")),
+        lit("Системный администратор")
+      )
+    )
+    .withColumn(
+      "sb",
+      when(
+        col("title").rlike(groupsMap("Специалист по IT безопасности")),
+        lit("Специалист по IT безопасности")
+      )
+    )
+    .withColumn(
+      "ba",
+      when(
+        col("title").rlike(groupsMap("Бизнес аналитик")),
+        lit("Бизнес аналитик")
+      )
+    )
+    .withColumn(
+      "sa",
+      when(
+        col("title").rlike(groupsMap("Системный аналитик")),
+        lit("Системный аналитик")
+      )
+    )
+    .withColumn(
+      "a",
+      when(
+        col("title").rlike(groupsMap("Аналитик")),
+        lit("Аналитик")
+      )
+    )
+    .withColumn(
+      "dev",
+      when(
+        col("title").rlike(groupsMap("Программист")),
+        lit("Программист")
+      )
+    )
+    .withColumn(
+      "de",
+      when(
+        col("title").rlike(groupsMap("Data Engineer")),
+        lit("Data Engineer")
+      )
+    )
+    .withColumn(
+      "bd",
+      when(
+        col("title").rlike(groupsMap("Специлист по БД")),
+        lit("Специлист по БД")
+      )
+    )
+    .withColumn(
+      "head",
+      when(
+        col("title").rlike(groupsMap("IT руководитель")),
+        lit("IT руководитель")
+      )
+    )
+    .withColumn(
+      "vacancy_group",
+      array_compact(array(group_columns.map((c: String) => col(c)): _*))
+    )
+    .drop(group_columns: _*)
 
   vacanciesHH
     .coalesce(1)
