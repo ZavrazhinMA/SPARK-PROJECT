@@ -198,7 +198,8 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       concat(col("temp_year"), col("temp_month")).cast(IntegerType)
     )
     .drop("temp_day", "temp_month", "temp_year", "employer_address")
-//    .withColumn("title_group", array(lit("")))
+
+//  =================================VACANCY GROUPS=====================================
     .withColumn(
       "ds",
       when(

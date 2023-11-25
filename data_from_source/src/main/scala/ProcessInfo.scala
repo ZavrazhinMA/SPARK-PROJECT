@@ -81,7 +81,7 @@ object ProcessInfo {
     "Бизнес аналитик" -> "бизнес аналит.*?|business analy.*?|аналит.*? бизнес|бизнес .*? аналит.*?",
     "Системный аналитик" -> ".*?систем.*? аналит.*?|system.*? analy.*?|аналит.*? системный|ситем.*? .*? аналит.*?\"",
     "Аналитик" -> "аналит.*?| analys.*?|\\bbi\\b",
-    "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c\\+\\+|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
+    "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c++|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
     "Data Engineer" -> "data engin.*?|bigdata|big data|spark",
     "Специлист по БД" -> "баз.*? данных.*?|sql|oracle|\\bбд\\b",
     "IT руководитель" -> "руковод.*? ит\\b|руковод.*? it\\b|начальн.*? ит\\b|начальн.*? it\\b|руководитель проектов ит|руководитель проектов it|начальник отдела it|директор по it"
