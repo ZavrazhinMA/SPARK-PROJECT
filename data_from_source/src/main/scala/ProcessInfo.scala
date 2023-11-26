@@ -79,7 +79,7 @@ object ProcessInfo {
     "Системный администратор" -> "сисадмин|систем.*? адм.*?|адм.*? систем.*?|систем.*? инжен.*?|сетев.*? инжен.*?|\\bsre\\b|sysops|linux",
     "Специалист по IT безопасности" -> "информаци.*? безопас.*?|защит.*? информ.*?|информ.*? защит.*?|безопас.*? информ.*?",
     "Бизнес аналитик" -> "бизнес аналит.*?|business analy.*?|аналит.*? бизнес|бизнес .*? аналит.*?|финансов.*? аналит.*?\"",
-    "Системный аналитик" -> ".*?систем.*? аналит.*?|system.*? analy.*?|аналит.*? системный|ситем.*? .*? аналит.*?\"",
+    "Системный аналитик" -> "систем.*? аналит.*?|.*?систем.*? аналит.*?|system.*? analy.*?|аналит.*? системный|ситем.*? .*? аналит.*?\"",
     "Аналитик" -> "аналит.*?| analys.*?|\\bbi\\b",
     "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c\\+\\+|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
     "Data Engineer" -> "data engin.*?|bigdata|big data|spark",
@@ -90,15 +90,15 @@ object ProcessInfo {
     "JAVA" -> "\\bjava\\b",
     "PYTHON" -> "python",
     "Swift_IOS" -> "swift|ios",
-    "Cplus" -> "c\\+\\+|c\\+\\+",
+    "Cplus" -> "c\\+\\+|с\\+\\+",
     "PHP" -> "\\bphp\\b",
     "JS" -> "\\bjs\\b|\\.js|javascript|java script|angular|react",
     "CSharp" -> "c#|с#",
-    "SCALA" -> "scala",
-    "KOTLIN" -> "kotlin",
-    "RUBY" -> "ruby|ruby on rails",
-    "GO" -> "go|golang",
+    "SCALA" -> "\\bscala\\b",
+    "KOTLIN" -> "\\bkotlin\\b",
+    "RUBY" -> "\\bruby\\b|ruby on rails",
+    "GO" -> "\\bgo\\b|\\bgolang\\b",
     "TypeScript" -> "typescript|type script|\\bts\\b",
-    "dotNET" -> ".net"
+    "dotNET" -> "\\.net"
   )
 }

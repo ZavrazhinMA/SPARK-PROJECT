@@ -268,7 +268,8 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       when(
         col("title").rlike(vacancyGroupsMap("Аналитик"))
           && !col("title").rlike(vacancyGroupsMap("Системный аналитик"))
-          && !col("title").rlike(vacancyGroupsMap("Бизнес аналитик")),
+          && !col("title").rlike(vacancyGroupsMap("Бизнес аналитик"))
+          && !col("title").rlike("1c|1с"),
         lit("Аналитик(other)")
       )
     )
