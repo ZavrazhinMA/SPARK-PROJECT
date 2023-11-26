@@ -203,100 +203,208 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .withColumn(
       "ds",
       when(
-        col("title").rlike(groupsMap("Data science")),
+        col("title").rlike(vacancyGroupsMap("Data science")),
         lit("Data science")
       )
     )
     .withColumn(
       "support",
       when(
-        col("title").rlike(groupsMap("Cпециалист техподдержки")),
+        col("title").rlike(vacancyGroupsMap("Cпециалист техподдержки")),
         lit("Cпециалист техподдержки")
       )
     )
     .withColumn(
       "qa",
-      when(col("title").rlike(groupsMap("QA специалист")), lit("QA специалист"))
+      when(
+        col("title").rlike(vacancyGroupsMap("QA специалист")),
+        lit("QA специалист")
+      )
     )
     .withColumn(
       "devops",
       when(
-        col("title").rlike(groupsMap("Devops специалист")),
+        col("title").rlike(vacancyGroupsMap("Devops специалист")),
         lit("Devops специалист")
       )
     )
     .withColumn(
       "_1c",
-      when(col("title").rlike(groupsMap("1C специалист")), lit("1C специалист"))
+      when(
+        col("title").rlike(vacancyGroupsMap("1C специалист")),
+        lit("1C специалист")
+      )
     )
     .withColumn(
       "sad",
       when(
-        col("title").rlike(groupsMap("Системный администратор")),
+        col("title").rlike(vacancyGroupsMap("Системный администратор")),
         lit("Системный администратор")
       )
     )
     .withColumn(
       "sb",
       when(
-        col("title").rlike(groupsMap("Специалист по IT безопасности")),
+        col("title").rlike(vacancyGroupsMap("Специалист по IT безопасности")),
         lit("Специалист по IT безопасности")
       )
     )
     .withColumn(
       "ba",
       when(
-        col("title").rlike(groupsMap("Бизнес аналитик")),
+        col("title").rlike(vacancyGroupsMap("Бизнес аналитик")),
         lit("Бизнес аналитик")
       )
     )
     .withColumn(
       "sa",
       when(
-        col("title").rlike(groupsMap("Системный аналитик")),
+        col("title").rlike(vacancyGroupsMap("Системный аналитик")),
         lit("Системный аналитик")
       )
     )
     .withColumn(
       "a",
       when(
-        col("title").rlike(groupsMap("Аналитик")),
-        lit("Аналитик")
+        col("title").rlike(vacancyGroupsMap("Аналитик"))
+          && !col("title").rlike(vacancyGroupsMap("Системный аналитик"))
+          && !col("title").rlike(vacancyGroupsMap("Бизнес аналитик")),
+        lit("Аналитик(other)")
       )
     )
     .withColumn(
       "dev",
       when(
-        col("title").rlike(groupsMap("Программист")),
+        col("title").rlike(vacancyGroupsMap("Программист")) && !col("title")
+          .rlike("1c|1с"),
         lit("Программист")
       )
     )
     .withColumn(
       "de",
       when(
-        col("title").rlike(groupsMap("Data Engineer")),
+        col("title").rlike(vacancyGroupsMap("Data Engineer")),
         lit("Data Engineer")
       )
     )
     .withColumn(
       "bd",
       when(
-        col("title").rlike(groupsMap("Специлист по БД")),
+        col("title").rlike(vacancyGroupsMap("Специлист по БД")),
         lit("Специлист по БД")
       )
     )
     .withColumn(
       "head",
       when(
-        col("title").rlike(groupsMap("IT руководитель")),
+        col("title").rlike(vacancyGroupsMap("IT руководитель")),
         lit("IT руководитель")
+      )
+    )
+//    ================================= PROGRAM LANGUAGES ==============================
+    .withColumn(
+      "JAVA",
+      when(
+        col("title").rlike(languagePlatformMap("JAVA")),
+        lit("JAVA")
+      )
+    )
+    .withColumn(
+      "PYTHON",
+      when(
+        col("title").rlike(languagePlatformMap("PYTHON")),
+        lit("PYTHON")
+      )
+    )
+    .withColumn(
+      "Swift_IOS",
+      when(
+        col("title").rlike(languagePlatformMap("Swift_IOS")),
+        lit("Swift_IOS")
+      )
+    )
+    .withColumn(
+      "Cplus",
+      when(
+        col("title").rlike(languagePlatformMap("Cplus")),
+        lit("C++")
+      )
+    )
+    .withColumn(
+      "PHP",
+      when(
+        col("title").rlike(languagePlatformMap("PHP")),
+        lit("PHP")
+      )
+    )
+    .withColumn(
+      "JS",
+      when(
+        col("title").rlike(languagePlatformMap("JS")),
+        lit("JS")
+      )
+    )
+    .withColumn(
+      "CSharp",
+      when(
+        col("title").rlike(languagePlatformMap("CSharp")),
+        lit("C#")
+      )
+    )
+    .withColumn(
+      "SCALA",
+      when(
+        col("title").rlike(languagePlatformMap("SCALA")),
+        lit("SCALA")
+      )
+    )
+    .withColumn(
+      "KOTLIN",
+      when(
+        col("title").rlike(languagePlatformMap("KOTLIN")),
+        lit("KOTLIN")
+      )
+    )
+    .withColumn(
+      "RUBY",
+      when(
+        col("title").rlike(languagePlatformMap("RUBY")),
+        lit("RUBY")
+      )
+    )
+    .withColumn(
+      "GO",
+      when(
+        col("title").rlike(languagePlatformMap("GO")),
+        lit("GO")
+      )
+    )
+    .withColumn(
+      "dotNET",
+      when(
+        col("title").rlike(languagePlatformMap("dotNET")),
+        lit(".NET")
+      )
+    )
+    .withColumn(
+      "TypeScript",
+      when(
+        col("title").rlike(languagePlatformMap("TypeScript")),
+        lit("TypeScript")
       )
     )
     .withColumn(
       "vacancy_group",
       array_compact(array(group_columns.map((c: String) => col(c)): _*))
     )
+    .withColumn(
+      "prog_language",
+      array_compact(
+        array(languagePlatformMap.keys.toArray.map((x: String) => col(x)): _*)
+      )
+    )
     .drop(group_columns: _*)
+    .drop(languagePlatformMap.keys.toArray: _*)
 
   vacanciesHH
     .coalesce(1)
