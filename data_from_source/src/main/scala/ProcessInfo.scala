@@ -84,7 +84,7 @@ object ProcessInfo {
     "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c\\+\\+|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
     "Data Engineer" -> "data engin.*?|bigdata|big data|spark",
     "Специлист по БД" -> "баз.*? данных.*?|sql|oracle|\\bбд\\b",
-    "IT руководитель" -> "руковод.*? ит\\b|руковод.*? it\\b|начальн.*? ит\\b|начальн.*? it\\b|руководитель проектов ит|руководитель проектов it|начальник отдела it|директор по it|team lead|руководитель группы разработки|teamlead"
+    "IT руководитель" -> "руковод.*? ит\\b|руковод.*? it\\b|начальн.*? ит\\b|начальн.*? it\\b|руководитель проектов ит|руководитель проектов it|начальник отдела it|директор по it|team lead|руководитель группы разработки|teamlead|\\blead\\b"
   )
   val languagePlatformMap: Map[String, String] = Map(
     "JAVA" -> "\\bjava\\b",

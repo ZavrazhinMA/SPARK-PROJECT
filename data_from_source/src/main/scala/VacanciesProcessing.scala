@@ -204,7 +204,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       "ds",
       when(
         col("title").rlike(vacancyGroupsMap("Data science")),
-        lit("Data science")
+        lit("Data scientist")
       )
     )
     .withColumn(
@@ -232,7 +232,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       "_1c",
       when(
         col("title").rlike(vacancyGroupsMap("1C специалист")),
-        lit("1C специалист")
+        lit("1C разработчик/аналитик")
       )
     )
     .withColumn(
@@ -278,7 +278,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       when(
         col("title").rlike(vacancyGroupsMap("Программист")) && !col("title")
           .rlike("1c|1с"),
-        lit("Программист")
+        lit("Программист/Разработчик")
       )
     )
     .withColumn(
@@ -292,7 +292,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
       "bd",
       when(
         col("title").rlike(vacancyGroupsMap("Специлист по БД")),
-        lit("Специлист по БД")
+        lit("Специлист по БД/SQL")
       )
     )
     .withColumn(

@@ -70,7 +70,7 @@ object ProcessInfo {
       "head"
     )
 
-  val groupsMap: Map[String, String] = Map(
+  val vacancyGroupsMap: Map[String, String] = Map(
     "Data science" -> "data sci.*?|\\bml\\b|nlp|\\bcv\\b|recsys|rec sys|research.*?|машин.*? обуч.*?|машин.*? зрен.*?|machin.*? learn.*?|comput.*? vision",
     "Cпециалист техподдержки" -> "поддержк.*?|support|service",
     "QA специалист" -> "\\bqa\\b|тестир|тест|test|aqa|qaa|automation",
@@ -78,12 +78,27 @@ object ProcessInfo {
     "1C специалист" -> "1c|1с",
     "Системный администратор" -> "сисадмин|систем.*? адм.*?|адм.*? систем.*?|систем.*? инжен.*?|сетев.*? инжен.*?|\\bsre\\b|sysops|linux",
     "Специалист по IT безопасности" -> "информаци.*? безопас.*?|защит.*? информ.*?|информ.*? защит.*?|безопас.*? информ.*?",
-    "Бизнес аналитик" -> "бизнес аналит.*?|business analy.*?|аналит.*? бизнес|бизнес .*? аналит.*?",
-    "Системный аналитик" -> ".*?систем.*? аналит.*?|system.*? analy.*?|аналит.*? системный|ситем.*? .*? аналит.*?\"",
-    "Аналитик" -> "аналит.*?| analys.*?|\\bbi\\b",
-    "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c++|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
+    "Бизнес аналитик" -> "бизнес аналит.*?|business analy.*?|аналит.*? бизнес|бизнес .*? аналит.*?|финансов.*? аналит.*?|\\bbi\\b",
+    "Системный аналитик" -> "систем.*? аналит.*?|.*?систем.*? аналит.*?|system.*? analy.*?|аналит.*? системный|ситем.*? .*? аналит.*?",
+    "Аналитик" -> "аналит.*?| analys.*?",
+    "Программист" -> "разраб.*?| develop.*?|программист|backend|frontend|fullstack|full stack|python|java|c#|c\\+\\+|ruby|\\.net|javascript|\\bgo\\b|\\bphp\\b|golang",
     "Data Engineer" -> "data engin.*?|bigdata|big data|spark",
     "Специлист по БД" -> "баз.*? данных.*?|sql|oracle|\\bбд\\b",
-    "IT руководитель" -> "руковод.*? ит\\b|руковод.*? it\\b|начальн.*? ит\\b|начальн.*? it\\b|руководитель проектов ит|руководитель проектов it|начальник отдела it|директор по it"
+    "IT руководитель" -> "руковод.*? ит\\b|руковод.*? it\\b|начальн.*? ит\\b|начальн.*? it\\b|руководитель проектов ит|руководитель проектов it|начальник отдела it|директор по it|team lead|руководитель .* разработки|teamlead|\\blead\\b"
+  )
+  val languagePlatformMap: Map[String, String] = Map(
+    "JAVA" -> "\\bjava\\b",
+    "PYTHON" -> "python",
+    "Swift_IOS" -> "swift|ios",
+    "Cplus" -> "c\\+\\+|с\\+\\+",
+    "PHP" -> "\\bphp\\b",
+    "JS" -> "\\bjs\\b|\\.js|javascript|java script|angular|react",
+    "CSharp" -> "c#|с#",
+    "SCALA" -> "\\bscala\\b",
+    "KOTLIN" -> "\\bkotlin\\b",
+    "RUBY" -> "\\bruby\\b|ruby on rails",
+    "GO" -> "\\bgo\\b|\\bgolang\\b",
+    "TypeScript" -> "typescript|type script|\\bts\\b",
+    "dotNET" -> "\\.net"
   )
 }
