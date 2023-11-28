@@ -9,7 +9,7 @@ import org.apache.spark.sql.types.{
 }
 object VacanciesKafka extends App with SparkSessionWrapper {
 
-  val topic = "hh_it"
+  val topic = "hh"
 
   val schema = ArrayType(
     new StructType()
