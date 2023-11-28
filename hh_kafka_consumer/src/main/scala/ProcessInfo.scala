@@ -71,7 +71,7 @@ object ProcessInfo {
     )
 
   val vacancyGroupsMap: Map[String, String] = Map(
-    "Data science" -> "data sci.*?|\\bml\\b|nlp|\\bcv\\b|recsys|rec sys|research.*?|машин.*? обуч.*?|машин.*? зрен.*?|machin.*? learn.*?|comput.*? vision",
+    "Data science" -> "data sci.*?|\\bml\\b|nlp|\\bcv\\b|recsys|rec sys|research.*?|машин.*? обуч.*?|машин.*? зрен.*?|machin.*? learn.*?|comput.*? vision|\\bdl\\b|deep learn.*?",
     "Cпециалист техподдержки" -> "поддержк.*?|support|service",
     "QA специалист" -> "\\bqa\\b|тестир|тест|test|aqa|qaa|automation",
     "Devops специалист" -> "devops",
