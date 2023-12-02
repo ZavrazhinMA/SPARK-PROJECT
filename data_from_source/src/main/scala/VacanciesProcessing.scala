@@ -1,5 +1,6 @@
 import org.apache.spark.sql.functions._
 import ProcessInfo._
+import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.types.{
   ArrayType,
   DoubleType,
@@ -7,7 +8,11 @@ import org.apache.spark.sql.types.{
   StringType,
   StructType
 }
+
+import java.io.File
 object VacanciesProcessing extends App with SparkSessionWrapper {
+
+  val config = ConfigFactory.parseFile(new File("paths.conf"))
 
   val schema = new StructType()
     .add("_id", StringType, nullable = false)
@@ -56,7 +61,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .schema(schema)
     .format("json")
     .option("multiline", value = true)
-    .load("src/main/source/it_rus_main.hh_it.json")
+    .load(config.getString("read_dir"))
     .withColumn("_id", col("_id").cast(IntegerType))
     .withColumn(
       "emp_feedback_number",
@@ -185,13 +190,7 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .withColumn("temp_year", regexp_extract(col("vacancy_date"), "\\d{4}", 0))
     .withColumn(
       "vacancy_date",
-      concat(
-        col("temp_year"),
-        lit("-"),
-        col("temp_month"),
-        lit("-"),
-        col("temp_day")
-      )
+      concat_ws("-", col("temp_year"), col("temp_month"), col("temp_day"))
     )
     .withColumn(
       "month_for_partition",
@@ -412,6 +411,6 @@ object VacanciesProcessing extends App with SparkSessionWrapper {
     .write
     .format("parquet")
     .mode("append")
-    .parquet("D:/results")
+    .parquet(config.getString("write_dir"))
 
 }

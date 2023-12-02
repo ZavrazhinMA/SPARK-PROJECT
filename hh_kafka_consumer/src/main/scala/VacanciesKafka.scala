@@ -1,5 +1,6 @@
 import org.apache.spark.sql.functions._
 import ProcessInfo._
+import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.types.{
   ArrayType,
   DoubleType,
@@ -7,9 +8,11 @@ import org.apache.spark.sql.types.{
   StringType,
   StructType
 }
+
+import java.io.File
 object VacanciesKafka extends App with SparkSessionWrapper {
 
-  val topic = "hh"
+  val config = ConfigFactory.parseFile(new File("params.conf"))
 
   val schema = ArrayType(
     new StructType()
@@ -59,7 +62,7 @@ object VacanciesKafka extends App with SparkSessionWrapper {
   val jsonStreamHH = spark.readStream
     .format("kafka")
     .option("kafka.bootstrap.servers", "localhost:9092")
-    .option("subscribe", topic)
+    .option("subscribe", config.getString("kafka_topic"))
     .load()
     .selectExpr("CAST(value as STRING)")
     .withColumn("jsonData", explode(from_json(col("value"), schema)))
@@ -192,13 +195,7 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .withColumn("temp_year", regexp_extract(col("vacancy_date"), "\\d{4}", 0))
     .withColumn(
       "vacancy_date",
-      concat(
-        col("temp_year"),
-        lit("-"),
-        col("temp_month"),
-        lit("-"),
-        col("temp_day")
-      )
+      concat_ws("-", col("temp_year"), col("temp_month"), col("temp_day"))
     )
     .withColumn(
       "month_for_partition",
@@ -418,7 +415,7 @@ object VacanciesKafka extends App with SparkSessionWrapper {
     .format("parquet")
     .outputMode("append")
     .option("checkpointLocation", "src/main/chkp")
-    .option("path", "D:/results")
+    .option("path", config.getString("write_dir"))
     .start()
     .awaitTermination()
 }

@@ -11,7 +11,8 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       library.sparkSql,
       library.sparkStreaming,
-      library.sparkKafka
+      library.sparkKafka,
+      library.conf
     ),
     // для собрки толстых JAR через assembly - от ошибок
     assembly / assemblyMergeStrategy := {

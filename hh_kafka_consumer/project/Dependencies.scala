@@ -4,6 +4,7 @@ object Dependencies {
     val sparkSql: ModuleID
     val sparkStreaming: ModuleID
     val sparkKafka: ModuleID
+    val conf: ModuleID
 
   } = new {
     object Version {
@@ -15,5 +16,6 @@ object Dependencies {
       "org.apache.spark" % "spark-streaming_2.12" % Version.spark
     val sparkKafka =
       "org.apache.spark" % "spark-sql-kafka-0-10_2.12" % Version.spark
+    val conf = "com.typesafe" % "config" % "1.4.3"
   }
 }

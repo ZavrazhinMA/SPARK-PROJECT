@@ -2,6 +2,7 @@ import sbt._
 object Dependencies {
   val library: Object {
     val sparkSql: ModuleID
+    val conf: ModuleID
 
   } = new {
     object Version {
@@ -10,5 +11,6 @@ object Dependencies {
 
     val sparkSql =
       "org.apache.spark" %% "spark-sql" % Version.spark
+    val conf = "com.typesafe" % "config" % "1.4.3"
   }
 }
